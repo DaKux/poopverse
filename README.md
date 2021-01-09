@@ -33,12 +33,12 @@ $ sudo -u postgres psql
 ```
 Inside the PostgreSQL prompt, do the following (replacing 'password' with your password):
 ```sql
-CREATE DATABASE oasis_db;
-CREATE USER oasis WITH PASSWORD 'password';
-ALTER ROLE oasis SET client_encoding TO 'utf8';
-ALTER ROLE oasis SET default_transaction_isolation TO 'read committed';
-ALTER ROLE oasis SET timezone TO 'UTC';
-GRANT ALL PRIVILEGES ON DATABASE oasis_db TO oasis;
+CREATE DATABASE closed_db;
+CREATE USER closed WITH PASSWORD 'password';
+ALTER ROLE closed SET client_encoding TO 'utf8';
+ALTER ROLE closed SET default_transaction_isolation TO 'read committed';
+ALTER ROLE closed SET timezone TO 'UTC';
+GRANT ALL PRIVILEGES ON DATABASE closed_db TO closed;
 \q
 ```
 Now run the following to install virtualenv (so we can find the executables easily):
@@ -48,8 +48,8 @@ $ sudo -H pip3 install virtualenv
 ```
 Now clone this repo with:
 ```console
-$ git clone https://github.com/stampylongr/oasisclosed
-$ cd oasisclosed
+$ git clone https://github.com/DaKux/poopverse/
+$ cd poopverse
 ```
 And create the virtualenv with:
 ```console
@@ -61,13 +61,12 @@ $ source oasis_env/bin/activate
 ```
 And install the requirements with the following:
 ```console
-$ pip install -r requirements.txt
 $ pip install psycopg2
 $ pip install gunicorn
 ```
 Edit your settings using:
 ```console
-$ nano ~/oasisclosed/closedverse/settings.py
+$ nano ~/poopverse/closedverse/settings.py
 ```
 Remember to change the user and password for the user in the settings!
 Also, don't forget to add your domain to the ALLOWED_HOSTS portion of the settings.py
@@ -130,8 +129,8 @@ After=network.target
 [Service]
 User=YOUR_USERNAME_HERE
 Group=www-data
-WorkingDirectory=/home/YOUR_USERNAME_HERE/oasisclosed
-ExecStart=/home/YOUR_USERNAME_HERE/oasisclosed/oasis_env/bin/gunicorn \
+WorkingDirectory=/home/YOUR_USERNAME_HERE/poopverse
+ExecStart=/home/YOUR_USERNAME_HERE/poopverse/oasis_env/bin/gunicorn \
           --access-logfile - \
           --workers 3 \
           --bind unix:/run/gunicorn.sock \
@@ -167,7 +166,7 @@ Now, for NGINX.
 
 Open a file using this command below:
 ```console
-$ sudo nano /etc/nginx/sites-available/oasis
+$ sudo nano /etc/nginx/sites-available/poop
 ```
 
 Paste the following inside:
@@ -178,10 +177,10 @@ server {
 
     location = /favicon.ico { access_log off; log_not_found off; }
     location /s/ {
-        root /home/YOUR_USERNAME_HERE/oasisclosed/s;
+        root /home/YOUR_USERNAME_HERE/poopverse/s/;
     }
     location /i/ {
-        root /home/YOUR_USERNAME_HERE/oasisclosed/media;
+        root /home/YOUR_USERNAME_HERE/poopverse/i/;
     }
     
     location / {
@@ -193,7 +192,7 @@ server {
 
 Now link the files:
 ```console
-$ sudo ln -s /etc/nginx/sites-available/oasis /etc/nginx/sites-enabled
+$ sudo ln -s /etc/nginx/sites-available/poopverse /etc/nginx/sites-enabled
 ```
 
 And run the NGINX test:
